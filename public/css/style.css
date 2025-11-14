@@ -17,7 +17,7 @@
   --footer-text: #ccc;
   --link-hover: #ffffff;
   /* Color matching the provided image's dark header/button */
-  --image-dark-bg: #0f1c2d; 
+  --image-dark-bg: #0f1c2d;
 }
 
 * {
@@ -30,7 +30,7 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
   background: url("../images/chat-bg1.jpeg");
-  margin: 0; 
+  margin: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -38,13 +38,13 @@ body {
 
 /* FIX: Ensure the wrapper allows the child to take up full space and stacks vertically */
 .body-wrapper {
-  flex: 1; 
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px; 
-  max-width: 100%; 
-  width: 100%; 
+  padding: 20px;
+  max-width: 100%;
+  width: 100%;
   flex-direction: column; /* Stack children vertically */
 }
 
@@ -131,9 +131,8 @@ a {
 
 /* Updated height for screen size */
 .fixed-height {
-  height: 95vh; 
+  height: 95vh;
 }
-
 
 /* ============================ */
 /* 3. HEADER & SIDEBAR STYLES (LANDING PAGE) */
@@ -274,17 +273,17 @@ a {
 }
 
 /* ============================ */
-/* 4. CHAT PAGE LAYOUT & COMPONENTS (RE-ADDED) */
+/* 4. CHAT PAGE LAYOUT & COMPONENTS (RE-ADDED - Consolidated) */
 /* ============================ */
 
 /* Main chat container ⬅️ UPDATED: Added Flexbox properties */
 .chat-container {
   max-width: 1100px;
   background: #fff;
-  margin: 20px auto; 
+  margin: 20px auto;
   overflow: hidden;
   min-height: 95vh;
-  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
   /* Make container flexible, stacking items vertically */
   display: flex;
   flex-direction: column;
@@ -298,7 +297,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0; /* Prevent header from shrinking */
 }
 
@@ -315,7 +314,7 @@ a {
   color: #fff;
   padding: 20px 20px 60px;
   overflow-y: scroll;
-  border-right: 1px solid rgba(255, 255, 255, 0.1); 
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .chat-sidebar h2 {
@@ -333,10 +332,12 @@ a {
   padding: 10px 0;
 }
 
+
 /* Chat Messages */
 .chat-messages {
   padding: 30px;
-  max-height: 95vh; 
+  /* Using max-height from the second block, which seems more reasonable than 95vh */
+  max-height: 500px;
   overflow-y: scroll;
 }
 
@@ -360,11 +361,12 @@ a {
   text-align: right;
 }
 
+
 /* Chat Form ⬅️ UPDATED: Prevent form from shrinking, ensuring it stays at bottom */
 .chat-form-container {
   padding: 20px 30px;
   background-color: #0a1931;
-  border-top: 1px solid rgba(255, 255, 255, 0.1); 
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
 
@@ -379,33 +381,24 @@ a {
   flex: 1;
 }
 
-
 /* ============================ */
-/* 5. JOIN PAGE LAYOUT & FORMS */
+/* 5. JOIN PAGE LAYOUT & FORMS (Consolidated) */
 /* ============================ */
 
 .join-container {
-  /* Adjusted to use local variable, but keeping existing join container styles */
-  max-width: 500px;
-  margin: 80px auto;
+  /* Combined rules */
+  max-width: 550px;
+  min-width: 500px;
+  width: 100%;
+  margin: 0;
   color: #fff;
-}
-/* The following blocks override the simple join-container styles for the custom design: */
-
-.join-container {
-  /* ADJUSTED WIDTH: Set to 550px */
-  max-width: 550px; 
-  min-width: 500px; 
-  width: 100%; 
-  margin: 0; 
-  color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
-  border-radius: 0; 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  border-radius: 0;
   overflow: hidden;
 }
 
 /* Specific header style for the join box to match the image */
-.join-header { /* Targeting join-header without .image-header class to catch all uses */
+.join-header {
   text-align: center;
   padding: 20px;
   background: #0a1931;
@@ -415,14 +408,15 @@ a {
   background: var(--image-dark-bg);
   padding: 15px 20px;
 }
+
 .join-header.image-header h1 {
   font-size: 1.8em;
 }
 
 .join-main {
-  /* ADJUSTED PADDING: Set to 35px */
-  padding: 40px 35px; 
-  background: #ffffff; 
+  /* ADJUSTED PADDING: Set to 35px from image-header block */
+  padding: 40px 35px;
+  background: #ffffff;
   color: black;
 }
 
@@ -437,7 +431,7 @@ a {
 .join-main label {
   display: block;
   margin-bottom: 5px;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 .join-main input[type="text"],
@@ -449,14 +443,14 @@ a {
   height: 40px;
   width: 100%;
   box-sizing: border-box;
-  border-radius: 0; 
+  border-radius: 0;
   border: 1px solid #ccc;
 }
 
 
 /* --- Dynamic Input Fixes (for the index.html swap logic) --- */
 #custom-room-input {
-  display: none; 
+  display: none;
   margin-top: 10px;
 }
 
@@ -467,10 +461,24 @@ a {
 
 /* Overrides default margin-top on .btn for consistent button spacing */
 .join-main .btn {
-  margin-top: 0; 
+  /* Using 10px 15px padding from the second block as it's more specific */
+  margin-top: 0;
   width: 100%;
-  border-radius: 0; 
+  border-radius: 0;
   padding: 10px 15px;
+}
+
+/* Additional join-main select and button styles from the incomplete media query block */
+.join-main select {
+  font-size: 16px;
+  padding: 5px;
+  height: 40px;
+  width: 100%;
+}
+
+.join-main .btn {
+  margin-top: 20px;
+  width: 100%;
 }
 
 /* ============================ */
@@ -483,7 +491,7 @@ a {
   margin-top: 40px; /* Space below the join box */
   padding: 40px 20px;
   /* Updated background for better visibility */
-  background-color: rgba(15, 28, 45, 0.85); 
+  background-color: rgba(15, 28, 45, 0.85);
   border-radius: 5px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   color: white;
@@ -494,8 +502,8 @@ a {
   font-size: 2em;
   margin-bottom: 20px;
   /* FIX: Changed to white and added shadow for prominence */
-  color: #FFFFFF; 
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); 
+  color: #FFFFFF;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .about-content p {
@@ -636,7 +644,7 @@ a {
 /* ============================ */
 
 @media (max-width: 700px) {
-  
+
   /* Chat Page responsive layout */
   .chat-main {
     display: block;
@@ -645,6 +653,7 @@ a {
   .chat-sidebar {
     display: none;
   }
+
 
   /* Join Page adjustments */
   .join-container {
