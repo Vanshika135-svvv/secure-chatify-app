@@ -6,21 +6,18 @@ const socketio = require("socket.io");
 const formatMessage = require("./utils/messages.js");
 const { encrypt, decrypt } = require("./utils/cryptography.js");
 const Cryptr = require("cryptr");
-const Room = require("./RoomSchema.js"); 
+const Room = require("./RoomSchema.js");
 const bcrypt = require("bcrypt");
 var bodyParser = require("body-parser");
 const cryptr = new Cryptr(
   "56dce7276d2b0a24e032beedf0473d743dbacf92aafe898e5a0f8d9898c9eae80a73798beed53489e8dbfd94191c1f28dc58cad12321d8150b93a2e092a744265fd214d7c2ef079e2f01b6d06319b7b2"
 );
 
-// Database Connection with Mongoose Fixes
+// --- FIXED DATABASE CONNECTION (Uses Environment Variable) ---
+const MONGODB_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chat_db";
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/chat_db", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true, 
-    useFindAndModify: false 
-  })
+  .connect(MONGODB_URI) 
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ DB Error:", err));
   
@@ -29,7 +26,7 @@ const {
   getCurrentUser,
   userLeave,
   getRoomUsers,
-} = require("./utils/users.js"); // Assuming utils/users.js exists
+} = require("./utils/users.js"); 
 
 const app = express();
 const server = http.createServer(app);
@@ -108,7 +105,7 @@ app.get("/rooms", async (req, res) => {
         // Fetches only the 'name' field from all room documents
         const rooms = await Room.find({}, 'name').lean();
         const roomNames = rooms.map(room => room.name);
-        res.json(roomNames); // Returns names like ["cybersec", "algorithms", ...]
+        res.json(roomNames); 
     } catch (error) {
         console.error("Error fetching rooms:", error);
         res.status(500).json([]);
@@ -118,7 +115,6 @@ app.get("/rooms", async (req, res) => {
 
 app.get("/decrypt", (req, res) => {
   const message = req.query.message;
-  console.log("LD: " + message.length);
   const decrypted = cryptr.decrypt(message);
   res.json(decrypted);
 });
@@ -126,52 +122,52 @@ app.get("/decrypt", (req, res) => {
 app.get("/encrypt", (req, res) => {
   const message = req.query.message;
   const encrypted = cryptr.encrypt(message);
-  console.log("LE: " + encrypted.length);
   res.json(encrypted);
 });
 
 // ---------------------------------------------
 // --- ROUTE 1: VALIDATE/JOIN EXISTING ROOM ---
+// FIX: Switched to async/await and redirects all errors to one page.
 // ---------------------------------------------
-app.post("/validate", (req, res) => {
+app.post("/validate", async (req, res) => {
   const { username, room: roomName, key } = req.body;
   
   const normalizedRoomName = roomName.toLowerCase().trim();
 
-  Room.findOne({ name: normalizedRoomName }, async (err, room) => {
+  try {
+    const room = await Room.findOne({ name: normalizedRoomName });
     
-    if (err || room === null) {
-      // If room is not found, redirect to error page using absolute path (FIXED)
-      return res.redirect("/room-not-found.html"); 
-    }
-
-    try {
-      if (await bcrypt.compare(key, room.secretKey)) {
-        // Success: Redirect to chat.html with query parameters using absolute path (FIXED)
-        const url = `/chat.html?room=${normalizedRoomName}&username=${username}&sk=${room._id}`;
-        console.log("Redirecting to (JOIN SUCCESS): " + url);
-        return res.redirect(url); 
-      } else {
-        // Wrong password, redirect using absolute path (FIXED)
-        return res.redirect("/wrong-password.html");
-      }
-    } catch (e) {
-      console.error("Validation Error: ", e);
-      // General error redirect using absolute path (FIXED)
+    if (room === null) {
+      // Room not found, redirect to the existing error page
       return res.redirect("/wrong-password.html"); 
     }
-  });
+
+    if (await bcrypt.compare(key, room.secretKey)) {
+      // SUCCESS: Redirect to chat.html
+      const url = `/chat.html?room=${normalizedRoomName}&username=${username}&sk=${room._id}`;
+      console.log("Redirecting to (JOIN SUCCESS): " + url);
+      return res.redirect(url); 
+    } else {
+      // Wrong password, redirect to the existing error page
+      return res.redirect("/wrong-password.html");
+    }
+  } catch (e) {
+    console.error("Validation Error: ", e);
+    // General error redirect to the existing error page
+    return res.redirect("/wrong-password.html"); 
+  }
 });
 
 // ---------------------------------------------
 // --- ROUTE 2: CREATE NEW ROOM ---
+// FIX: Redirects all creation errors to one page.
 // ---------------------------------------------
 app.post("/create", async (req, res) => {
   const { username, room: roomName, key } = req.body; 
   
   if (!username || !roomName || !key) {
-    // Basic validation for missing fields, redirect using absolute path (FIXED)
-    return res.redirect("/missing-fields.html"); 
+    // Missing fields, redirect to the existing error page
+    return res.redirect("/wrong-password.html"); 
   }
   
   const normalizedRoomName = roomName.toLowerCase().trim();
@@ -180,8 +176,8 @@ app.post("/create", async (req, res) => {
     const existingRoom = await Room.findOne({ name: normalizedRoomName });
     
     if (existingRoom) {
-      // Room name already exists, redirect using absolute path (FIXED)
-      return res.redirect("/room-exists.html"); 
+      // Room name already exists, redirect to the existing error page
+      return res.redirect("/wrong-password.html"); 
     }
 
     const saltRounds = 10;
@@ -195,13 +191,13 @@ app.post("/create", async (req, res) => {
     await newRoom.save();
     console.log(`✅ New room created: ${normalizedRoomName}`);
     
-    // REDIRECTS TO CHAT PAGE AFTER CREATION using absolute path (FIXED)
+    // SUCCESS: REDIRECTS TO CHAT PAGE
     const url = `/chat.html?room=${normalizedRoomName}&username=${username}&sk=${newRoom._id}`;
     return res.redirect(url);
 
   } catch (error) {
     console.error("Room Creation Error:", error);
-    // General error redirect using absolute path (FIXED)
+    // General error redirect to the existing error page
     return res.redirect("/wrong-password.html");
   }
 });
