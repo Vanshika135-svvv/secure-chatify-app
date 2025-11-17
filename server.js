@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
+require("dotenv").config(); // Load environment variables from .env file
 const formatMessage = require("./utils/messages.js");
 const { encrypt, decrypt } = require("./utils/cryptography.js");
 const Cryptr = require("cryptr");

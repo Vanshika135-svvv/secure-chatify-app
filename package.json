@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cryptr": "^6.0.2",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "moment": "^2.30.1",
     "mongoose": "^8.19.4",
