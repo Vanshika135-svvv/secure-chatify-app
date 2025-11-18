@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -10,537 +10,273 @@
       integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
       crossorigin="anonymous"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css" /> 
     <title>Chatify App</title>
-</head>
- 
-<body>
-    <header class="main-header">
-        <div class="header-left">
-            <a href="#" class="logo-link white-text">
-                <i class="fas fa-comment"></i> Chatify
-            </a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#home-section">Home</a></li>
-                    <li><a href="#about-section">About</a></li>
-                    <li><a href="#help-section">Help</a></li>
-                    <li><a href="#main-footer" id="contact-link">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
+  </head>
 
-        <div class="header-right white-text">
-            <button id="open-history-btn" class="icon-btn white-text" aria-label="View Join History">
-                <i class="fas fa-history"></i>
-            </button>
+  <body>
+    <!-- 1. GLOBAL HEADER / NAVIGATION (Fixed to top) -->
+    <header class="global-header">
+        <div class="header-logo">
+            <i class="fas fa-comment"></i> Chatify
         </div>
+        <nav class="header-nav">
+            <a href="#home-section" class="nav-link active" data-target="home-section">Home</a>
+            <a href="#about-section" class="nav-link" data-target="about-section">About</a>
+            <a href="#help-section" class="nav-link" data-target="help-section">Help</a>
+            <a href="#contact-footer" class="nav-link" data-target="contact-section">Contact</a>
+        </nav>
+        <button class="history-toggle" id="history-toggle">
+            <i class="fas fa-history"></i> History
+        </button>
     </header>
 
-    <div class="body-wrapper" id="home-section">
-        <div class="join-container">
-            <header class="join-header image-header">
-                <h1 class="white-text"><i class="fas fa-comment"></i> Chatify</h1>
-            </header>
+    <!-- 2. HISTORY SLIDEBAR -->
+    <aside class="history-sidebar" id="history-sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-history"></i> Room History</h3>
+            <button class="close-history" id="history-close-button">&times;</button>
+        </div>
+        <ul class="history-list">
+            <li>[10:30 AM] Joined: Cyber Security</li>
+        </ul>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-            <main class="join-main">
-                <form id="join-form" action="/validate" method="POST">
-                    <div class="form-control">
-                        <label for="username">Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="Enter username..."
-                            required
-                        />
-                    </div>
+    <!-- 3. SCROLLABLE MAIN CONTENT AREA -->
+    <main class="content-scroll-wrapper">
+        
+        <!-- HOME SECTION: Initial Centered View -->
+        <section id="home-section" class="content-section home-section-style">
+            <div class="join-container">
+                <header class="join-header"> 
+                    <h1 class="white-text"><i class="fas fa-comment"></i> Chatify</h1>
+                </header>
 
-                    <div class="form-control">
-                        <label for="room-select">Room</label>
-
-                        <select id="room-select" name="room">
-                            <!-- Options populated by fetchRooms JS function -->
-                        </select>
-
-                        <input
-                            type="text"
-                            id="custom-room-input"
-                            placeholder="Enter NEW Room Name..."
-                        />
-                    </div>
-
-                    <div class="form-control">
-                        <div class="key">
-                            <label for="key">Room Security Key</label>
-                            <input
-                                type="password"
-                                placeholder="Enter Room Security Key..."
-                                name="key"
-                                id="key"
-                                class="key-input"
-                                required
-                            />
+                <div class="join-main">
+                    <form id="join-form" action="/validate" method="POST">
+                        <div class="form-control">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username" placeholder="Enter username..." required />
                         </div>
-                    </div>
 
-                    <div class="button-container">
-                        <button type="submit" id="join-btn" class="btn join-chat-btn">
-                            Join Chat
-                        </button>
-                        <button type="button" id="create-btn" class="btn btn-create">
-                            Create New Room
-                        </button>
-                    </div>
-                </form>
-            </main>
-        </div>
-      
-        <div class="about-section" id="about-section">
-            <div class="about-content">
-                <h2>About Chatify</h2>
-                <p>Chatify is your dedicated, secure platform for real-time collaboration and private conversations. We prioritize user control with room-specific security keys, ensuring only authorized members can join.</p>
-                <p>Whether you're hosting a study group, a confidential team meeting, or just chatting with friends, Chatify provides the simple, reliable, and secure experience you need.</p>
-                <a href="#" class="about-btn">Learn More</a>
-            </div>
-        </div>
+                        <div class="form-control">
+                            <label for="room-select">Room</label>
+                            <select id="room-select" name="room"></select>
+                            <input type="text" id="custom-room-input" placeholder="Enter NEW Room Name..."/>
+                        </div>
 
-        <div class="help-section" id="help-section">
-            <h2><i class="fas fa-headset"></i> Chatify Help Center</h2>
-            <p class="help-subtitle">Find immediate answers or connect with our support team.</p>
-            <div class="help-cards-container">
-                <div class="help-card">
-                    <i class="fas fa-question-circle card-icon"></i>
-                    <h3>FAQs & Knowledge Base</h3>
-                    <p>Quick answers to common questions about joining, room keys, and features.</p>
-                    <a href="#" class="help-link">View FAQs &rarr;</a>
-                </div>
-                <div class="help-card">
-                    <i class="fas fa-book card-icon"></i>
-                    <h3>Documentation</h3>
-                    <p>Detailed guides on advanced usage and room creation settings.</p>
-                    <a href="#" class="help-link">Read Guides &rarr;</a>
-                </div>
-                <div class="help-card">
-                    <i class="fas fa-envelope icon"></i>
-                    <h3>Contact Support</h3>
-                    <p>Submit a ticket for technical assistance or report an issue.</p>
-                    <a href="#" class="help-link">Get Help &rarr;</a>
+                        <div class="form-control">
+                            <div class="key">
+                                <label for="key">Room Security Key</label>
+                                <input type="password" placeholder="Enter Room Security Key..." name="key" id="key" class="key-input" required />
+                            </div>
+                        </div>
+
+                        <div class="button-container">
+                            <button type="submit" id="join-btn" class="btn">Join Chat</button>
+                            <button type="button" id="create-btn" class="btn btn-create">Create New Room</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>
-    <footer class="bg-gray-950 text-gray-300 border-t border-blue-900/50 shadow-2xl" id="main-footer">
-        <div class="pt-4 pb-2 px-4 md:px-16 text-center border-b border-gray-800">
-            <p class="text-base font-light italic text-blue-300/90 tracking-wide">
-                “Connecting securely, communicating instantly. Chatify—where your conversation privacy matters.”
-            </p>
-        </div>
-
-        <div class="max-w-7xl mx-auto py-4 px-6 md:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8">
-
-            <div class="md:col-span-4">
-                <h3 class="text-lg font-semibold mb-3 text-white">Stay Connected</h3>
-                <form class="flex flex-col space-y-3">
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        id="subscribe-email"
-                        required
-                        class="p-2 bg-gray-800 text-white border border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    />
-                    <button
-                        type="button"
-                        id="subscribe-button"
-                        class="py-2 px-4 text-white font-medium rounded-lg shadow-lg text-sm
-                            bg-gradient-to-r from-indigo-600 to-blue-500
-                            hover:from-indigo-700 hover:to-blue-600 transition duration-300 transform hover:scale-[1.01] active:scale-100"
-                    >
-                        Subscribe
-                    </button>
-                </form>
-            </div>
-
-            <div class="md:col-start-6 md:col-span-3">
-                <h3 class="text-lg font-semibold mb-3 text-white">Explore</h3>
-                <nav class="space-y-4">
-                    <a href="#home-section" class="footer-scroll-link flex items-start text-gray-400 hover:text-blue-400 transition duration-200 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" class="link-icon group-hover:stroke-blue-400" fill="none">
-                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
-                        </svg>
-                        <div class="text-xs">
-                            <span class="font-medium text-white group-hover:text-blue-400 block text-sm">Home</span>
-                            <p class="text-gray-400/80">Create, join, and quickly access chat rooms.</p>
-                        </div>
-                    </a>
-
-                    <a href="#about-section" class="footer-scroll-link flex items-start text-gray-400 hover:text-blue-400 transition duration-200 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" class="link-icon group-hover:stroke-blue-400" fill="none">
-                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-                        </svg>
-                        <div class="text-xs">
-                            <span class="font-medium text-white group-hover:text-blue-400 block text-sm">About Us</span>
-                            <p class="text-gray-400/80">Learn our mission and commitment to security.</p>
-                        </div>
-                    </a>
-
-                    <a href="#help-section" class="footer-scroll-link flex items-start text-gray-400 hover:text-blue-400 transition duration-200 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" class="link-icon group-hover:stroke-blue-400" fill="none">
-                            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
-                        </svg>
-                        <div class="text-xs">
-                            <span class="font-medium text-white group-hover:text-blue-400 block text-sm">Help Center</span>
-                            <p class="text-gray-400/80">Find guides, FAQs, and support channels.</p>
-                        </div>
-                    </a>
-
-                    <a href="#main-footer" class="footer-scroll-link flex items-start text-gray-400 hover:text-blue-400 transition duration-200 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" class="link-icon group-hover:stroke-blue-400" fill="none">
-                            <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.83 1.83 0 0 1-2.06 0L2 7"/>
-                        </svg>
-                        <div class="text-xs">
-                            <span class="font-medium text-white group-hover:text-blue-400 block text-sm">Contact</span>
-                            <p class="text-gray-400/80">Get in touch with our team directly.</p>
-                        </div>
-                    </a>
-                </nav>
-            </div>
-
-            <div class="md:col-start-10 md:col-span-3">
-                <h3 class="text-lg font-semibold mb-3 text-white">Connect</h3>
+        </section>
+        
+        <!-- ABOUT SECTION: PROFESSIONAL SCROLLABLE CONTENT -->
+        <section id="about-section" class="content-section info-section-style">
+            <div class="about-theme-container">
+                <h2 class="theme-title">Our Mission: Enterprise-Grade Secure Messaging</h2>
                 
-                <p class="text-gray-400 mb-4 text-sm">
-                    Email: <a href="mailto:support@chatify.app" class="text-blue-400 hover:text-blue-300 transition duration-200">support@chatify.app</a>
-                </p>
-
-                <div class="flex space-x-3">
-                    <a href="https://linkedin.com/chatify" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-blue-600 hover:text-white transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                    </a>
-                    <a href="https://twitter.com/chatify" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-white hover:text-gray-900 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.016 4.33a8.914 8.914 0 0 1-2.5.733A4.472 4.472 0 0 0 20.37 2a4.48 4.48 0 0 1-2.82 1.077 4.469 4.469 0 0 0-7.617 3.06 12.673 12.673 0 0 1-9.2-4.665 4.473 4.473 0 0 0 1.38 5.968 4.445 4.445 0 0 1-2.028-.557v.056a4.47 4.47 0 0 0 3.58 4.385 4.447 4.447 0 0 1-2.015.076 4.47 4.47 0 0 0 4.168 3.107 8.97 8.97 0 0 1-5.568 1.92 9.07 9.07 0 0 1-1.07-.062 12.665 12.665 0 0 0 6.845 2.016A12.666 12.666 0 0 0 22 7.042c-.002-.27-.008-.538-.016-.807z"/></svg>
-                    </a>
-                    <a href="https://instagram.com/chatify" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-pink-600 hover:text-white transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.013 4.85.071 1.17.054 1.892.235 2.37.426.545.234.872.505 1.226.862.355.356.627.683.861 1.226.19.478.371 1.201.425 2.37.058 1.267.07 1.647.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.235 1.892-.426 2.37-.234.545-.505.872-.862 1.226-.356.355-.683.627-1.226.861-.478.19-1.201.371-2.37.425-1.267.058-1.647.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.892-.235-2.37-.426-.545-.234-.872-.505-1.226-.862-.356-.355-.627-.683-.861-1.226-.19-.478-.371-1.201-.425-2.37-.058-1.267-.07-1.647-.07-4.85s.012-3.584.07-4.85c.054-1.17.235-1.892.426-2.37.234-.545.505-.872.862-1.226.355-.356.683-.627 1.226-.861.478-.19 1.201-.371 2.37-.425 1.267-.058 1.647-.07 4.85-.07zm0 2.138c-3.267 0-3.627.01-4.848.067-1.077.047-1.677.22-2.062.377-.456.177-.704.341-.994.631-.29.29-.454.538-.63.994-.157.385-.33 1.002-.377 2.062-.057 1.221-.067 1.581-.067 4.847 0 3.266.01 3.627.067 4.848.047 1.077.22 1.677.377 2.062.177.456.341.704.631.994.29.29.538.454.994.63.385.157 1.002.33 2.062.377 1.221.058 1.581.068 4.848.068s3.626-.01 4.847-.068c1.077-.047 1.677-.22 2.062-.377.456-.176.704-.34 1.226-.862.29-.29.454-.538.63-.994.157-.385.33-1.002.377-2.062.058-1.221.068-1.581.068-4.847s-.01-3.626-.068-4.847c-.047-1.077-.22-1.677-.377-2.062-.177-.456-.341-.704-.63-.994-.29-.29-.538-.454-.994-.63-.385-.157-1.002-.33-2.062-.377-1.221-.058-1.581-.068-4.847-.068zm0 2.138c2.613 0 4.726 2.113 4.726 4.726s-2.113 4.726-4.726 4.726-4.726-2.113-4.726-4.726 2.113-4.726 4.726-4.726zm0 2.138c-1.42 0-2.588 1.168-2.588 2.588s1.168 2.588 2.588 2.588 2.588-1.168 2.588-2.588-1.168-2.588-2.588-2.588zm5.176-3.868c0 .77-.624 1.394-1.394 1.394-.77 0-1.394-.624-1.394-1.394 0-.77.624-1.394 1.394-1.394s1.394.624 1.394 1.394z" />
-                    </svg>
-                    </a>
+                <div class="card-grid">
+                    
+                    <div class="about-card interactive-card">
+                        <i class="fas fa-microchip icon-large"></i>
+                        <h3>Scalable Architecture</h3>
+                        <p>Built on the **MEAN stack (MongoDB, Express, Node.js)** and **Socket.io** for high-speed, real-time data exchange.</p>
+                    </div>
+                    
+                    <div class="about-card interactive-card">
+                        <i class="fas fa-lock icon-large"></i>
+                        <h3>Cryptographic Security</h3>
+                        <p>We utilize **Cryptr** for End-to-End Encryption (E2EE) of messages and industry-standard **bcrypt** for robust password hashing.</p>
+                    </div>
+                    
+                    <div class="about-card interactive-card">
+                        <i class="fas fa-users-cog icon-large"></i>
+                        <h3>Dynamic Room Creation</h3>
+                        <p>Users are empowered to instantly create and secure new private group channels, ensuring autonomous control.</p>
+                    </div>
+                    
+                    <div class="about-card quick-links-card interactive-card">
+                        <h3>Next Steps</h3>
+                        <ul>
+                            <li><a href="#home-section" class="nav-link" data-target="home-section">Access Chat Portal <i class="fas fa-arrow-right"></i></a></li>
+                            <li><a href="#" id="about-history-link">Review Session History <i class="fas fa-history"></i></a></li>
+                            <li><a href="#help-section" class="nav-link" data-target="help-section">Documentation & Support <i class="fas fa-question-circle"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- HELP SECTION: PROFESSIONAL FAQ -->
+        <section id="help-section" class="content-section info-section-style">
+            <div class="info-box help-box">
+                <h2 class="theme-title">Technical Support & FAQ</h2>
                 
-                <div class="mt-8">
-                    <h4 class="text-sm font-semibold mb-2 text-white/90">Legal & Terms</h4>
-                    <ul class="text-xs space-y-1">
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition duration-200">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition duration-200">Terms of Service</a></li>
-                    </ul>
-                </div>
+                <h3 class="help-question">Q: What database is used for room persistence?</h3>
+                <p class="help-answer">A: We leverage **MongoDB** to handle the persistent storage of room names and their associated secure bcrypt hashes.</p>
+                
+                <h3 class="help-question">Q: How is the 'cannot POST /create' error prevented?</h3>
+                <p class="help-answer">A: Client-side JavaScript dynamically sets the form action to the correct server endpoint, `/create`, ensuring reliable server communication before submission.</p>
+                
+                <h3 class="help-question">Q: How do I ensure my custom room name appears in the dropdown?</h3>
+                <p class="help-answer">A: Once created, the room name is saved in the database, and the client automatically fetches the updated room list via the `/rooms` API endpoint upon every page load.</p>
             </div>
-        </div>
+        </section>
 
-        <div class="border-t border-gray-800/50">
-            <div class="max-w-7xl mx-auto py-3 px-6 md:px-8 text-center text-xs text-gray-500">
-                © 2025 Chatify App. All rights reserved.
+    </main>
+    
+    <!-- 4. GLOBAL FOOTER (Contact Info) -->
+    <footer class="global-footer" id="contact-footer">
+        <div class="footer-content">
+            <h4>Connect with Us</h4>
+            <div class="social-links">
+                <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" title="Chatify LinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" title="Chatify Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Chatify Instagram"><i class="fab fa-instagram"></i> Instagram</a>
             </div>
+            <p>&copy; 2025 Chatify App | Enterprise Secure Communication</p>
         </div>
     </footer>
-    <div id="history-sidebar" class="history-sidebar">
-        <h2>Join History</h2>
-        <button id="close-history-btn" class="icon-btn" aria-label="Close History">
-            <i class="fas fa-times"></i>
-        </button>
-        <div id="history-content" class="history-content">
-            <p>No recent join activity found.</p>
-        </div>
-    </div>
-    <div id="floating-notification" class="notification-box">
-        <i class="fas fa-check-circle"></i> Subscribed successfully!
-    </div>
-        
-    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
     <script>
-        const form = document.getElementById("join-form");
-        const roomSelect = document.getElementById("room-select");
-        const customRoomInput = document.getElementById("custom-room-input");
-        const joinBtn = document.getElementById("join-btn");
-        const createBtn = document.getElementById("create-btn");
+        // --- ALL JAVASCRIPT LOGIC ---
+        
+        const form = document.getElementById('join-form');
+        const roomSelect = document.getElementById('room-select');
+        const customRoomInput = document.getElementById('custom-room-input');
+        const joinBtn = document.getElementById('join-btn');
+        const createBtn = document.getElementById('create-btn');
+
+        // --- Navigation & Sidebar Logic ---
+        const navLinks = document.querySelectorAll('.header-nav .nav-link');
+        const historyToggle = document.getElementById('history-toggle');
         const historySidebar = document.getElementById('history-sidebar');
-        const openHistoryBtn = document.getElementById('open-history-btn');
-        const closeHistoryBtn = document.getElementById('close-history-btn');
-        const historyContent = document.getElementById('history-content');
-        const subscribeBtn = document.getElementById('subscribe-button'); 
-        const subscribeEmail = document.getElementById('subscribe-email'); 
-        const notificationBox = document.getElementById('floating-notification'); 
-        const sidebarBackdrop = document.getElementById('sidebar-backdrop'); 
-        
-        // Select all navigation links (Header and Footer Quick Links)
-        const navLinks = document.querySelectorAll('.main-nav a, .footer-scroll-link');
+        const closeHistory = document.getElementById('history-close-button'); 
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-
-        // --- NEW NOTIFICATION FUNCTIONALITY ---
-        function showNotification(message) {
-            notificationBox.textContent = message;
-            notificationBox.classList.add('show');
-            setTimeout(() => {
-                notificationBox.classList.remove('show');
-            }, 3000); // Hide after 3 seconds
+        function toggleSidebar(show) {
+            historySidebar.classList.toggle('open', show);
+            sidebarOverlay.style.display = show ? 'block' : 'none';
         }
+        historyToggle.addEventListener('click', () => toggleSidebar(true));
+        closeHistory.addEventListener('click', () => toggleSidebar(false));
+        sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
 
-        // --- HISTORY LOGIC FUNCTIONS ---
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('chatify_join_history') || '[]');
-            historyContent.innerHTML = ''; // Clear existing content
+        // --- Navigation Logic (Smooth Scrolling) ---
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const targetElement = document.querySelector(link.getAttribute('href'));
 
-            if (history.length === 0) {
-                historyContent.innerHTML = '<p class="history-entry">No recent join activity found.</p>';
-                return;
-            }
-
-            history.forEach(entry => {
-                const div = document.createElement('div');
-                div.className = 'history-entry';
-                div.innerHTML = `
-                    Room: <span>${entry.room}</span><br>
-                    Joined: ${entry.time}
-                `;
-                historyContent.appendChild(div);
-            });
-        }
-
-        function addHistoryEntry(roomName) {
-            const now = new Date();
-            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' on ' + now.toLocaleDateString('en-US');
-            
-            const newEntry = {
-                room: roomName.toUpperCase(),
-                time: time,
-            };
-
-            const history = JSON.parse(localStorage.getItem('chatify_join_history') || '[]');
-            // Add new entry to the start, and keep only the last 10 entries
-            history.unshift(newEntry);
-            if (history.length > 10) {
-                history.pop();
-            }
-            
-            localStorage.setItem('chatify_join_history', JSON.stringify(history));
-            loadHistory(); // Reload sidebar content
-        }
-
-        // --- ROOM FORM LOGIC FUNCTIONS ---
-        
-        // Function to fetch room names from the server and populate the dropdown
-        async function fetchRooms() {
-            try {
-            
-                // Fetch real room names from the backend
-                const response = await fetch('/rooms');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
                 }
-                const roomNames = await response.json(); 
+                
+                navLinks.forEach(nl => nl.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
 
-                roomSelect.innerHTML = "";
+        document.getElementById('about-history-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleSidebar(true);
+        });
 
-                roomNames.forEach((name) => {
-                    const option = document.createElement("option");
+        // --- Room Logic (Functions) ---
+        function toggleRoomMode(isCreateMode) {
+            if (isCreateMode) {
+                customRoomInput.style.display = 'block';
+                joinBtn.style.display = 'none';
+                createBtn.style.display = 'block';
+                roomSelect.removeAttribute('name');
+                customRoomInput.setAttribute('name', 'room');
+            } else {
+                customRoomInput.style.display = 'none';
+                joinBtn.style.display = 'block';
+                createBtn.style.display = 'none';
+                customRoomInput.removeAttribute('name');
+                roomSelect.setAttribute('name', 'room');
+            }
+        }
+        
+        async function fetchRooms() {
+             try {
+                // 1. Fetch data from the server's custom API endpoint
+                const response = await fetch('/rooms');
+                
+                // CRITICAL FIX: Check response status before parsing JSON
+                if (!response.ok) {
+                    console.error(`HTTP error! status: ${response.status}`);
+                    // If server isn't running, this will trigger the fallback
+                    throw new Error('Server fetch failed.'); 
+                }
+                const roomNames = await response.json();
+                
+                roomSelect.innerHTML = '';
+                
+                // 2. Populate the dropdown with fetched rooms
+                roomNames.forEach(name => {
+                    const option = document.createElement('option');
                     option.value = name;
-                    // Capitalize first letter of each word for display
-                    option.textContent = name
-                        .split(" ")
-                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                        .join(" ");
+                    option.textContent = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                     roomSelect.appendChild(option);
                 });
 
-                // Always add the create-new option last
-                const createOption = document.createElement("option");
-                createOption.value = "create-new";
-                createOption.textContent = "— Create New Room —";
+                // 3. Add the required "Create New Room" option last
+                const createOption = document.createElement('option');
+                createOption.value = 'create-new';
+                createOption.textContent = '— Create New Room —';
                 roomSelect.appendChild(createOption);
-
-                // Ensure correct initial state is set
+                
                 toggleRoomMode(false);
                 
-                // Set the default selected value to the first fetched room, if available
+                // Select the first room (e.g., 'cybersec')
                 if (roomNames.length > 0) {
-                    roomSelect.value = roomNames[0];
+                     roomSelect.value = roomNames[0]; 
                 }
-            
+
             } catch (error) {
                 console.error("Failed to load rooms:", error);
-                // Fallback: If fetch fails, still allow manual room creation
-                roomSelect.innerHTML =
-                    '<option value="create-new">— Create New Room —</option>';
+                // Fallback: If network fails, still allow manual room creation
+                roomSelect.innerHTML = '<option value="create-new">— Create New Room —</option>';
                 toggleRoomMode(true);
             }
         }
 
-        // Function to handle the form state change (Join vs. Create)
-        function toggleRoomMode(isCreateMode) {
-            if (isCreateMode) {
-                // --- CREATE MODE ---
-                customRoomInput.style.display = "block";
-                // Set required for the custom input when creating
-                customRoomInput.setAttribute("required", "true"); 
-                
-                joinBtn.style.display = "none";
-                createBtn.style.display = "block";
-
-                customRoomInput.setAttribute("name", "room");
-                roomSelect.removeAttribute("name");
-
-            } else {
-                // --- JOIN MODE (Default) ---
-                customRoomInput.style.display = "none";
-                customRoomInput.removeAttribute("required");
-                
-                joinBtn.style.display = "block";
-                createBtn.style.display = "none";
-
-                roomSelect.setAttribute("name", "room");
-                customRoomInput.removeAttribute("name");
-            }
-        }
-        
-        // --- Sidebar Toggle Function ---
-        function toggleSidebar(open) {
-            if (open) {
-                historySidebar.classList.add('sidebar-open');
-                sidebarBackdrop.classList.add('show');
-                loadHistory();
-            } else {
-                historySidebar.classList.remove('sidebar-open');
-                sidebarBackdrop.classList.remove('show');
-            }
-        }
-
-        // --- EVENT LISTENERS ---
-
-        // Subscription Logic
-        subscribeBtn.addEventListener('click', () => {
-            if (subscribeEmail.checkValidity()) {
-                // Simulate API call success
-                showNotification('Subscribed successfully!');
-                subscribeEmail.value = ''; // Clear input
-            } else {
-                // Trigger browser validation message if input is invalid/empty
-                subscribeEmail.reportValidity();
-            }
-        });
-
-
-        // Toggle Sidebar
-        openHistoryBtn.addEventListener('click', () => {
-            toggleSidebar(true);
-        });
-
-        closeHistoryBtn.addEventListener('click', () => {
-            toggleSidebar(false);
-        });
-        
-        // Close sidebar if clicking the backdrop
-        sidebarBackdrop.addEventListener('click', () => {
-            toggleSidebar(false);
-        });
-
-
-        // UNIVERSAL Smooth Scroll for all NavBar and Footer Quick Links
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const targetId = link.getAttribute('href');
-                // Check if it's an internal link starting with #
-                if (targetId && targetId.startsWith('#')) {
-                    e.preventDefault(); 
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start' 
-                        });
-                    }
-                }
-            });
-        });
-
-
-        // Event listener for dropdown change
-        roomSelect.addEventListener("change", (e) => {
-            const isCreateMode = e.target.value === "create-new";
+        roomSelect.addEventListener('change', (e) => {
+            const isCreateMode = e.target.value === 'create-new';
             toggleRoomMode(isCreateMode);
         });
 
-        // Event listener for CREATE button click (type="button")
-        createBtn.addEventListener("click", (e) => {
-            // Prevent default submit since we manually change form.action
-            e.preventDefault(); 
-            
-            const roomName = customRoomInput.value.trim();
-            const username = document.getElementById("username").value.trim();
-            const key = document.getElementById("key").value.trim();
-            
-            // Basic client-side validation for mandatory fields in CREATE mode
-            if (username && roomName && key) {
-                addHistoryEntry(roomName);
-                form.action = "/create";
-                form.submit();
-            } else {
-                // Use reportValidity to trigger browser's native error messages
-                document.getElementById("username").reportValidity();
-                customRoomInput.reportValidity();
-                document.getElementById("key").reportValidity();
-            }
+        createBtn.addEventListener('click', () => {
+            form.action = '/create';
+            form.submit(); 
         });
 
-        // Event listener for JOIN button click (type="submit")
-        // THIS IS THE MAIN LOGIC FOR JOINING AN EXISTING ROOM
-        joinBtn.addEventListener("click", (e) => {
-            // Prevent default form submission
-            e.preventDefault(); 
-            
-            const roomName = roomSelect.options[roomSelect.selectedIndex].value; 
-            const username = document.getElementById("username").value.trim();
-            const key = document.getElementById("key").value.trim();
-            
-            // Basic client-side validation for mandatory fields in JOIN mode
-            if (username && key && roomName && roomName !== 'create-new') {
-                // 1. Set action to validation route (already done by toggleRoomMode, but safe to set explicitly)
-                form.action = "/validate";
-                
-                // 2. Add history entry (uses the display text, not the internal value)
-                const displayRoomName = roomSelect.options[roomSelect.selectedIndex].textContent;
-                addHistoryEntry(displayRoomName);
-                
-                // 3. Submit the form to the server
-                form.submit();
-            } else if (roomName === 'create-new') {
-                // If user somehow clicks Join while 'Create New Room' is selected
-                showNotification("Please use the 'Create New Room' button to create a room.");
-                console.error("Attempted to join while 'Create New Room' option was selected.");
-            } else {
-                // Trigger browser validation messages for missing fields
-                document.getElementById("username").reportValidity();
-                document.getElementById("key").reportValidity();
-            }
+        joinBtn.addEventListener('click', () => {
+            form.action = '/validate'; 
         });
-        
-        // Submit listener is simplified as buttons handle validation and history now
-        form.addEventListener("submit", (e) => {
-            // Ensure the correct mode is set if submission happens via Enter key:
+
+        form.addEventListener('submit', (e) => {
             const isCreateMode = roomSelect.value === 'create-new';
-            if (isCreateMode) {
-                form.action = "/create";
-                // Validation happens on createBtn click, but if user hits Enter key, we just let the form submit
-            } else {
-                form.action = "/validate";
-                // Validation handled by server side check in /validate endpoint
-            }
+            toggleRoomMode(isCreateMode);
         });
-        
 
-        // Initialize on page load: Fetch and display rooms
+        // Execute fetch on page load
         fetchRooms();
     </script>
-</body>
+  </body>
 </html>
-
