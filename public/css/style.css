@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
 /* ============================ */
 /* 1. BASE STYLES & VARIABLES */
@@ -10,12 +10,14 @@
   --light-color: #e6e9ff;
   --success-color: #5cb85c;
   --error-color: #d9534f;
-  
   /* Custom Variables */
   --create-btn-color: #1a5a1a;
   --header-bg: #0a1931;
-  --sidebar-width: 300px;
-  --card-primary-color: var(--dark-color-a);
+  --footer-bg: #071221;
+  --footer-text: #ccc;
+  --link-hover: #ffffff;
+  /* Color matching the provided image's dark header/button */
+  --image-dark-bg: #0f1c2d;
 }
 
 * {
@@ -24,21 +26,26 @@
   padding: 0;
 }
 
-/* KEY FIX: Enables smooth scroll across the page */
-html {
-    scroll-behavior: smooth;
-}
-
 body {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
-  background: url("../images/chat-bg1.jpeg"); 
+  background: url("../images/chat-bg1.jpeg");
   margin: 0;
-  /* Body acts as the vertical flex container for the main content block */
   min-height: 100vh;
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  flex-direction: column;
+}
+
+/* FIX: Ensure the wrapper allows the child to take up full space and stacks vertically */
+.body-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 100%;
+  width: 100%;
+  flex-direction: column; /* Stack children vertically */
 }
 
 ul {
@@ -50,206 +57,381 @@ a {
 }
 
 /* ============================ */
-/* 2. GLOBAL LAYOUT & NAVIGATION (FIXED/ABSOLUTE POSITIONING) */
+/* 2. BUTTONS & UTILITIES */
 /* ============================ */
 
-.global-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: var(--header-bg);
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; 
-    z-index: 10;
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  padding: 5px;
+  transition: opacity 0.3s;
 }
 
-.header-logo {
-    font-size: 20px;
-    font-weight: bold;
-    flex-shrink: 0; 
+.icon-btn:hover {
+  opacity: 0.8;
 }
 
-.header-nav {
-    display: flex;
-    gap: 20px;
-    margin: 0 auto 0 10%; 
-    transform: translateX(-15%); 
+.btn {
+  cursor: pointer;
+  padding: 5px 15px;
+  background: var(--header-bg);
+  color: white;
+  border: 0;
+  font-size: 17px;
 }
 
-.header-nav a {
-    color: white;
-    opacity: 0.8;
-    padding: 5px;
-    transition: opacity 0.3s;
+/* Specific button styling to match the "Join Chat" button in the image */
+.join-chat-btn {
+  background: var(--image-dark-bg);
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-radius: 0; /* Remove existing rounded corners */
+}
+.join-chat-btn:hover {
+  background: #1e3553;
 }
 
-.history-toggle {
-    background: var(--dark-color-a);
-    border: none;
-    padding: 8px 15px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 15px;
-    flex-shrink: 0; 
+/* This container holds the dynamically swapped Join/Create buttons */
+.button-container {
+  min-height: 50px;
 }
 
-.global-footer {
-    width: 100%;
-    background: #222;
-    color: #ccc;
-    text-align: center;
-    padding: 10px;
-    font-size: 14px;
+/* Specific styling for the Create Room button */
+.btn-create {
+  background: var(--create-btn-color);
+  color: white;
+  margin-top: 20px;
+  width: 100%;
 }
 
-/* --- SCROLLABLE CONTENT SECTIONS --- */
-
-.content-scroll-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column; 
+.btn-create:hover {
+  background: #258a25;
 }
 
-.content-section {
-    padding: 30px 20px;
-    width: 100%;
-    max-width: 100%; 
-    margin: 0 auto;
-    /* Initial state for sliding animation */
-    opacity: 0;
-    transform: translateY(20px); 
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+/* Initial hidden state for the create button (overridden by JS) */
+#create-btn {
+  display: none;
 }
 
-/* HOME SECTION: Forces 100vh height to center the box vertically */
-#home-section {
-    min-height: 100vh; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Adds space for the fixed header */
-    padding-top: 60px; 
+.border-solid {
+  border-style: solid;
 }
 
-/* INFO SECTIONS (About, Help, Contact): Standard scrollable blocks */
-.info-section-style {
-    padding: 60px 40px; 
-    background: rgba(0, 0, 0, 0.05); 
+.border-white {
+  border-style: solid;
+  border-color: white;
+}
+
+.white-text {
+  color: white;
+}
+
+/* Updated height for screen size */
+.fixed-height {
+  height: 95vh;
 }
 
 /* ============================ */
-/* 3. ABOUT/HELP/CONTACT THEME & STYLES */
+/* 3. HEADER & SIDEBAR STYLES (LANDING PAGE) */
 /* ============================ */
 
-.about-theme-container, .help-box {
-    padding: 40px; 
-    background: rgba(255, 255, 255, 0.98); 
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: 0 auto;
+.main-header {
+  background: var(--header-bg);
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.theme-title {
-    color: var(--header-bg);
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 28px;
-    border-bottom: 3px solid var(--dark-color-a);
-    padding-bottom: 10px;
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+.logo-link {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-right: 60px; /* INCREASED MARGIN to push nav right */
 }
 
-.about-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 5px solid var(--dark-color-a);
-    padding: 20px;
-    border-radius: 6px;
-    text-align: center;
-    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+.main-nav ul {
+  display: flex;
+  gap: 35px; /* Increased gap for professional spacing */
 }
 
-.about-card h3, .help-question {
-    color: var(--header-bg);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
+/* Updated Nav Link Styles for Hover Effect */
+.main-nav a {
+  color: var(--light-color);
+  font-size: 1.1em;
+  padding: 5px 0;
+  transition: color 0.3s, border-bottom 0.3s; /* Added border transition */
+  border-bottom: 2px solid transparent; /* Default state: transparent underline */
 }
 
-.icon-large {
-    font-size: 36px;
-    color: var(--dark-color-a);
-    margin-bottom: 10px;
+.main-nav a:hover {
+  color: var(--link-hover);
+  border-bottom: 2px solid var(--dark-color-a); /* Visible underline on hover */
 }
 
-.interactive-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-top-color: var(--dark-color-a);
+.header-right {
+  font-size: 0.9em;
+  text-align: right;
 }
 
-.quick-links-card a {
-    font-weight: 500;
-    color: var(--dark-color-b);
+/* History Sidebar Styles */
+.history-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: var(--image-dark-bg); /* Darkened sidebar background */
+  color: #fff;
+  box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+  transform: translateX(100%); /* Start off-screen */
+  transition: transform 0.3s ease-in-out;
+  padding: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
-.help-answer {
-    margin-bottom: 20px;
-    padding-left: 15px;
-    border-left: 3px solid var(--dark-color-a);
+.history-sidebar.sidebar-open {
+  transform: translateX(0); /* Slide into view */
 }
 
+.history-sidebar h2 {
+  font-size: 1.4em;
+  color: var(--dark-color-a);
+  margin-bottom: 20px;
+  padding-right: 40px;
+}
+
+#close-history-btn {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  color: var(--light-color);
+  font-size: 1.8em;
+}
+
+.history-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Ensures scrollbar appears if content overflows */
+  padding-right: 5px; /* Space for the scrollbar */
+}
+
+.history-entry {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle background for entries */
+  border-radius: 5px;
+  font-size: 0.9em;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.history-entry span {
+  font-weight: bold;
+  color: var(--dark-color-a);
+}
+
+/* NEW: Sidebar Backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent color */
+  z-index: 999; /* Below the sidebar, above everything else */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* NEW: SVG Icon helper for Tailwind Footer (from user's request) */
+.link-icon {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  margin-right: 0.75rem; /* 12px */
+  fill: none;
+  stroke: currentColor; /* Use text color for stroke */
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0; /* Prevents icons from shrinking in flex layout */
+  margin-top: 3px; /* Align icon better with multiline text */
+}
 
 /* ============================ */
-/* 4. JOIN BOX COMPONENT (FIXED WIDTH AND STYLING) */
+/* 4. CHAT PAGE LAYOUT & COMPONENTS (RE-ADDED - Consolidated) */
+/* ============================ */
+
+/* Main chat container ⬅️ UPDATED: Added Flexbox properties */
+.chat-container {
+  max-width: 1100px;
+  background: #fff;
+  margin: 20px auto;
+  overflow: hidden;
+  min-height: 95vh;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Make container flexible, stacking items vertically */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat Header */
+.chat-header {
+  background: #0a1931;
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* Main Chat Area ⬅️ UPDATED: Added flex-grow to fill vertical space */
+.chat-main {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  flex-grow: 1; /* Allows this section to push the footer down */
+}
+
+/* Chat Sidebar */
+.chat-sidebar {
+  background: #0a1931;
+  color: #fff;
+  padding: 20px 20px 60px;
+  overflow-y: scroll;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-sidebar h2 {
+  font-size: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.chat-sidebar h3 {
+  margin-bottom: 15px;
+}
+
+.chat-sidebar ul li {
+  padding: 10px 0;
+}
+
+
+/* Chat Messages */
+.chat-messages {
+  padding: 30px;
+  /* Using max-height from the second block, which seems more reasonable than 95vh */
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.chat-messages .message {
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #c1cdd7;
+  border-radius: 5px;
+}
+
+.chat-messages .message .meta {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--dark-color-b);
+  opacity: 0.7;
+  margin-bottom: 7px;
+}
+
+.chat-messages .message .meta span {
+  color: #777;
+  text-align: right;
+}
+
+
+/* Chat Form ⬅️ UPDATED: Prevent form from shrinking, ensuring it stays at bottom */
+.chat-form-container {
+  padding: 20px 30px;
+  background-color: #0a1931;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.chat-form-container form {
+  display: flex;
+}
+
+.chat-form-container input[type="text"] {
+  font-size: 16px;
+  padding: 5px;
+  height: 40px;
+  flex: 1;
+}
+
+/* ============================ */
+/* 5. JOIN PAGE LAYOUT & FORMS (Consolidated) */
 /* ============================ */
 
 .join-container {
-    max-width: 400px; 
-    width: 100%; 
-    background-color: white; 
-    border-radius: 5px; 
-    overflow: hidden; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin: 0; 
+  /* Combined rules */
+  max-width: 550px;
+  min-width: 500px;
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  overflow: hidden;
 }
 
+/* Specific header style for the join box to match the image */
 .join-header {
   text-align: center;
   padding: 20px;
-  background: var(--header-bg);
-  color: white; 
+  background: #0a1931;
 }
 
-.join-header h1 {
-    font-size: 24px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; 
+.join-header.image-header {
+  background: var(--image-dark-bg);
+  padding: 15px 20px;
 }
 
+.join-header.image-header h1 {
+  font-size: 1.8em;
+}
 
 .join-main {
-  padding: 30px 40px; 
-  background: #fdfaf6; 
+  /* ADJUSTED PADDING: Set to 35px from image-header block */
+  padding: 40px 35px;
+  background: #ffffff;
   color: black;
+}
+
+.join-main p {
+  margin-bottom: 20px;
 }
 
 .join-main .form-control {
   margin-bottom: 20px;
+}
+
+.join-main label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: normal;
 }
 
 .join-main input[type="text"],
@@ -261,99 +443,224 @@ a {
   height: 40px;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 0;
+  border: 1px solid #ccc;
 }
 
-/* ============================ */
-/* 5. BUTTONS, INPUTS & SLIDEBAR & RESPONSIVE DESIGN */
-/* ============================ */
 
-.btn {
-  cursor: pointer;
-  padding: 5px 15px;
-  background: var(--header-bg);
-  color: white;
-  border: 0;
-  font-size: 17px;
+/* --- Dynamic Input Fixes (for the index.html swap logic) --- */
+#custom-room-input {
+  display: none;
+  margin-top: 10px;
 }
 
-.btn-create {
-  background: var(--create-btn-color);
-  color: white;
-  margin-top: 20px;
+/* Adjustments for inputs that aren't text/select */
+.key-input {
+  margin-top: 3px;
+}
+
+/* Overrides default margin-top on .btn for consistent button spacing */
+.join-main .btn {
+  /* Using 10px 15px padding from the second block as it's more specific */
+  margin-top: 0;
+  width: 100%;
+  border-radius: 0;
+  padding: 10px 15px;
+}
+
+/* Additional join-main select and button styles from the incomplete media query block */
+.join-main select {
+  font-size: 16px;
+  padding: 5px;
+  height: 40px;
   width: 100%;
 }
 
 .join-main .btn {
-  margin-top: 0; 
+  margin-top: 20px;
   width: 100%;
-  padding: 10px 15px;
 }
 
-#custom-room-input {
-    display: none; 
-    margin-top: 10px;
-}
-#create-btn {
-    display: none;
+/* ============================ */
+/* 6. ABOUT SECTION STYLES */
+/* ============================ */
+
+.about-section {
+  width: 100%; /* Take full width of wrapper */
+  max-width: 900px; /* Wider than the join box for visual distinction */
+  margin-top: 40px; /* Space below the join box */
+  padding: 40px 20px;
+  /* Updated background for better visibility */
+  background-color: rgba(15, 28, 45, 0.85);
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
 }
 
-.history-sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: var(--sidebar-width);
-    height: 100%;
-    background: #fff;
-    color: #333;
-    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    transform: translateX(var(--sidebar-width)); 
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000; 
+.about-content h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  /* FIX: Changed to white and added shadow for prominence */
+  color: #FFFFFF;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    z-index: 999;
+.about-content p {
+  max-width: 700px;
+  margin: 0 auto 20px auto;
+  line-height: 1.6;
+  opacity: 0.9;
 }
 
-.border-white { color: white; }
-.white-text { color: white; }
-
-@media (max-width: 900px) {
-    .card-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
+.about-btn {
+  display: inline-block;
+  padding: 10px 30px;
+  margin-top: 10px;
+  background: var(--dark-color-a);
+  color: white;
+  font-weight: bold;
+  border-radius: 50px;
+  transition: background 0.3s;
 }
+
+.about-btn:hover {
+  background: var(--dark-color-b);
+}
+
+/* ============================ */
+/* 7. HELP SECTION STYLES */
+/* ============================ */
+
+.help-section {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 40px;
+  padding: 40px 20px;
+  background-color: rgba(255, 255, 255, 0.95); /* Bright background for contrast */
+  color: #333;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.help-section h2 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  color: var(--header-bg);
+}
+
+.help-subtitle {
+  font-size: 1.1em;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.help-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.help-card {
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.help-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  font-size: 3em;
+  color: var(--dark-color-a);
+  margin-bottom: 15px;
+}
+
+.help-card h3 {
+  font-size: 1.4em;
+  color: var(--image-dark-bg);
+  margin-bottom: 10px;
+}
+
+.help-card p {
+  font-size: 0.95em;
+  color: #777;
+  margin-bottom: 20px;
+  min-height: 45px; /* Ensures cards are same height if text length varies */
+}
+
+.help-link {
+  display: inline-block;
+  color: var(--dark-color-a);
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.help-link:hover {
+  color: var(--dark-color-b);
+}
+
+
+/* ============================ */
+/* 8. FLOATING NOTIFICATION (NEW) */
+/* ============================ */
+.notification-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--success-color);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+  font-weight: bold;
+  z-index: 1001;
+}
+
+.notification-box i {
+  margin-right: 8px;
+}
+
+.notification-box.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ============================ */
+/* 9. MEDIA QUERIES (Updated for Chat and Join Pages) */
+/* ============================ */
 
 @media (max-width: 700px) {
-    .global-header {
-        flex-wrap: wrap;
-        justify-content: space-around;
-        padding-bottom: 10px;
-    }
-    .header-nav {
-        order: 1; 
-        width: 100%;
-        padding: 10px 0 0 0;
-        justify-content: space-around;
-        margin: 0; 
-        transform: none; 
-    }
-    #home-section {
-        min-height: unset; 
-        padding-top: 120px; 
-    }
-    .join-container {
-        margin: 0 auto;
-    }
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
+
+  /* Chat Page responsive layout */
+  .chat-main {
+    display: block;
+  }
+
+  .chat-sidebar {
+    display: none;
+  }
+
+
+  /* Join Page adjustments */
+  .join-container {
+    min-width: 100%;
+  }
+
+  .join-main {
+    padding: 20px;
+  }
 }
